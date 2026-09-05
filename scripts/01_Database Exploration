@@ -1,0 +1,35 @@
+/*
+===============================================================================
+Database Exploration
+===============================================================================
+Purpose: Get familiar with the schema before diving into analysis —
+         table structure, row counts, and distinct value spot-checks.
+===============================================================================
+*/
+
+-- List all tables in the schema
+SHOW TABLES IN SCHEMA BFSI_ANALYTICS.CORE;
+
+-- Row counts per table
+SELECT 'branches' AS table_name, COUNT(*) AS row_count FROM branches
+UNION ALL
+SELECT 'customers', COUNT(*) FROM customers
+UNION ALL
+SELECT 'accounts', COUNT(*) FROM accounts
+UNION ALL
+SELECT 'transactions', COUNT(*) FROM transactions
+UNION ALL
+SELECT 'loans', COUNT(*) FROM loans;
+
+-- Explore distinct values in key categorical columns
+SELECT DISTINCT segment FROM customers;
+SELECT DISTINCT account_type, status FROM accounts;
+SELECT DISTINCT txn_type, channel FROM transactions;
+SELECT DISTINCT loan_type, status FROM loans;
+
+-- Date range covered by the transactions table
+SELECT
+    MIN(txn_date) AS earliest_txn,
+    MAX(txn_date) AS latest_txn,
+    DATEDIFF(day, MIN(txn_date), MAX(txn_date)) AS days_covered
+FROM transactions;
