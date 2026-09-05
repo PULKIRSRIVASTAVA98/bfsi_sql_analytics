@@ -1,0 +1,45 @@
+/*
+===============================================================================
+Measures & Metrics (Magnitude Analysis)
+===============================================================================
+Purpose: Core headline numbers — the "at a glance" KPIs a BFSI dashboard
+         would lead with.
+===============================================================================
+*/
+
+-- Total customers, active accounts, and total deposit balance
+SELECT
+    (SELECT COUNT(*) FROM customers)                                   AS total_customers,
+    (SELECT COUNT(*) FROM accounts WHERE status = 'Active')            AS active_accounts,
+    (SELECT SUM(balance) FROM accounts
+        WHERE status = 'Active' AND account_type <> 'Credit Card')     AS total_deposit_balance,
+    (SELECT SUM(sanctioned_amount) FROM loans WHERE status = 'Active') AS total_active_loan_book;
+
+-- Average account balance by account type
+SELECT
+    account_type,
+    COUNT(*)              AS num_accounts,
+    ROUND(AVG(balance),2) AS avg_balance
+FROM accounts
+WHERE status = 'Active'
+GROUP BY account_type
+ORDER BY avg_balance DESC;
+
+-- Transaction volume and value by type
+SELECT
+    txn_type,
+    COUNT(*)               AS txn_count,
+    ROUND(SUM(amount), 2)  AS total_value,
+    ROUND(AVG(amount), 2)  AS avg_txn_value
+FROM transactions
+GROUP BY txn_type
+ORDER BY total_value DESC;
+
+-- Loan book health: NPA ratio (Non-Performing Asset %)
+SELECT
+    status,
+    COUNT(*)                                                    AS loan_count,
+    ROUND(SUM(sanctioned_amount), 2)                             AS total_value,
+    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2)            AS pct_of_all_loans
+FROM loans
+GROUP BY status;
