@@ -1,0 +1,79 @@
+/*
+===============================================================================
+Init Script — BFSI SQL Analytics Project
+===============================================================================
+Creates the database, schema, and tables, then loads the synthetic
+CSV data from /datasets via Snowflake's internal stage.
+
+Run this once before running any of the analysis scripts.
+===============================================================================
+*/
+
+CREATE DATABASE IF NOT EXISTS BFSI_ANALYTICS;
+CREATE SCHEMA IF NOT EXISTS BFSI_ANALYTICS.CORE;
+USE SCHEMA BFSI_ANALYTICS.CORE;
+
+CREATE OR REPLACE TABLE branches (
+    branch_id     VARCHAR(10) PRIMARY KEY,
+    branch_name   VARCHAR(100),
+    region        VARCHAR(20),
+    state         VARCHAR(50)
+);
+
+CREATE OR REPLACE TABLE customers (
+    customer_id    VARCHAR(10) PRIMARY KEY,
+    segment        VARCHAR(20),
+    credit_score   INT,
+    join_date      DATE,
+    home_branch_id VARCHAR(10) REFERENCES branches(branch_id)
+);
+
+CREATE OR REPLACE TABLE accounts (
+    account_id    VARCHAR(10) PRIMARY KEY,
+    customer_id   VARCHAR(10) REFERENCES customers(customer_id),
+    account_type  VARCHAR(20),
+    open_date     DATE,
+    balance       NUMBER(15,2),
+    status        VARCHAR(10),
+    branch_id     VARCHAR(10) REFERENCES branches(branch_id)
+);
+
+CREATE OR REPLACE TABLE transactions (
+    transaction_id VARCHAR(12) PRIMARY KEY,
+    account_id     VARCHAR(10) REFERENCES accounts(account_id),
+    txn_date       DATE,
+    txn_type       VARCHAR(20),
+    amount         NUMBER(15,2),
+    channel        VARCHAR(20)
+);
+
+CREATE OR REPLACE TABLE loans (
+    loan_id            VARCHAR(10) PRIMARY KEY,
+    customer_id        VARCHAR(10) REFERENCES customers(customer_id),
+    loan_type          VARCHAR(30),
+    sanctioned_amount  NUMBER(15,2),
+    disbursed_date     DATE,
+    tenure_months      INT,
+    interest_rate      NUMBER(5,2),
+    status             VARCHAR(10)
+);
+
+-- Create a named file format for the CSV loads
+CREATE OR REPLACE FILE FORMAT csv_ff
+    TYPE = 'CSV'
+    FIELD_DELIMITER = ','
+    SKIP_HEADER = 1
+    NULL_IF = ('', 'NULL')
+    EMPTY_FIELD_AS_NULL = TRUE;
+
+-- Create an internal stage and upload the CSVs here via SnowSQL/Snowsight,
+-- then run the COPY INTO statements below.
+-- (SnowSQL: PUT file://datasets/branches.csv @bfsi_stage;)
+CREATE OR REPLACE STAGE bfsi_stage
+    FILE_FORMAT = csv_ff;
+
+COPY INTO branches     FROM @bfsi_stage/branches.csv;
+COPY INTO customers    FROM @bfsi_stage/customers.csv;
+COPY INTO accounts     FROM @bfsi_stage/accounts.csv;
+COPY INTO transactions FROM @bfsi_stage/transactions.csv;
+COPY INTO loans        FROM @bfsi_stage/loans.csv;
