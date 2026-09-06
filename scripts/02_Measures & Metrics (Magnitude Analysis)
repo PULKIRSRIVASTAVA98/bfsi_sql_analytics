@@ -1,11 +1,5 @@
-/*
-===============================================================================
-Measures & Metrics (Magnitude Analysis)
-===============================================================================
-Purpose: Core headline numbers — the "at a glance" KPIs a BFSI dashboard
-         would lead with.
-===============================================================================
-*/
+#Measures & Metrics (Magnitude Analysis)
+#Purpose: Core headline numbers — the "at a glance" KPIs a BFSI dashboard, would lead with.
 
 -- Total customers, active accounts, and total deposit balance
 SELECT
