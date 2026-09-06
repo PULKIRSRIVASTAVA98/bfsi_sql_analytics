@@ -1,13 +1,6 @@
-/*
-===============================================================================
-Init Script — BFSI SQL Analytics Project
-===============================================================================
-Creates the database, schema, and tables, then loads the synthetic
-CSV data from /datasets via Snowflake's internal stage.
+--Creates the database, schema, and tables, then loads the synthetic
+--CSV data from /datasets via Snowflake's internal stage.
 
-Run this once before running any of the analysis scripts.
-===============================================================================
-*/
 
 CREATE DATABASE IF NOT EXISTS BFSI_ANALYTICS;
 CREATE SCHEMA IF NOT EXISTS BFSI_ANALYTICS.CORE;
