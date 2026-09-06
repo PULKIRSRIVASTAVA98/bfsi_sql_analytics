@@ -1,11 +1,5 @@
-/*
-===============================================================================
-Database Exploration
-===============================================================================
-Purpose: Get familiar with the schema before diving into analysis —
-         table structure, row counts, and distinct value spot-checks.
-===============================================================================
-*/
+#Database Exploration
+#Purpose: Get familiar with the schema before diving into analysis, table structure, row counts, and distinct value spot-checks.
 
 -- List all tables in the schema
 SHOW TABLES IN SCHEMA BFSI_ANALYTICS.CORE;
