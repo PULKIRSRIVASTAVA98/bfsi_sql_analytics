@@ -1,10 +1,10 @@
 # BFSI SQL Analytics Project
 
-A collection of Snowflake SQL scripts demonstrating core analytical techniques — trend analysis, cumulative metrics, performance comparison, segmentation, and part-to-whole analysis — applied to a synthetic banking dataset.
+A collection of Snowflake SQL scripts demonstrating core analytical techniques, trend analysis, cumulative metrics, performance comparison, segmentation, and part-to-whole analysis, applied to a synthetic banking dataset.
 
 Built to practice SQL analytics patterns commonly used in BFSI (Banking, Financial Services & Insurance) reporting: deposit trends, loan book health, branch performance, and customer segmentation.
 
-> **Data note:** all data in `/datasets` is synthetically generated (see `/datasets/generate_data.py`) — no real customer, account, or transaction data is used anywhere in this project.
+> **Data note:** all data in `/datasets` is synthetically generated, no real customer, account, or transaction data is used anywhere in this project.
 
 ## Schema
 
@@ -39,18 +39,8 @@ transactions >── accounts
 ## Tech stack
 
 - **Snowflake** — SQL engine (window functions, `DATE_TRUNC`, `QUALIFY`-ready syntax)
-- **Python** — synthetic data generation (`datasets/generate_data.py`)
 
 ## Getting started
-
-```bash
-git clone <your-repo-url>
-cd bfsi-sql-analytics-project
-
-# regenerate the synthetic dataset (optional — CSVs are already included)
-python3 datasets/generate_data.py
-```
-
 In Snowflake (via SnowSQL or Snowsight):
 
 ```sql
@@ -63,6 +53,3 @@ In Snowflake (via SnowSQL or Snowsight):
 !source scripts/03_changes_over_time_analysis.sql
 ```
 
-## Credits
-
-Inspired by the analytical technique categories taught in [Data With Baraa's SQL course](https://github.com/DataWithBaraa/sql-data-analytics-project) (MIT licensed) — reworked here for a BFSI domain, Snowflake SQL dialect, and a fully synthetic dataset.
